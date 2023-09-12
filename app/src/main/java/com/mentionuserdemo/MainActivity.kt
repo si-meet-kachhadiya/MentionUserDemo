@@ -35,13 +35,16 @@ class MainActivity : AppCompatActivity(), SocialMentionAutoComplete.textShows {
                     val selectedUser = autoCompleteTextView.text.toString()
                     val currentText = editText.text.toString()
                     val mentionText = "@$selectedUser "
+                    val mentionStartIndex = currentText.lastIndexOf("@")
+
                     val newText =
                         currentText.replaceRange(
-                            editText.selectionStart,
+                            mentionStartIndex,
                             editText.selectionEnd,
                             mentionText
                         )
                     editText.setText(newText)
+                    editText.setSelection(newText.length)
                     autoCompleteTextView.text = null
                 }
 
@@ -128,7 +131,7 @@ class MainActivity : AppCompatActivity(), SocialMentionAutoComplete.textShows {
 
     override fun autoText(query: String) {
         filterUsers(query)
-        map["@" + mentionPerson] = mentionPerson
+//        map["@" + mentionPerson] = mentionPerson
     }
 }
 
