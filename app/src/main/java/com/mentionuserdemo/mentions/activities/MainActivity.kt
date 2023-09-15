@@ -126,12 +126,35 @@ class MainActivity : AppCompatActivity(), QueryListener, SuggestionsListener {
                 comment.comment = commentField!!.text.toString()
                 comment.mentions = mentions!!.insertedMentions
                 commentsAdapter!!.add(comment)
-                val start = mentions!!.insertedMentions[0].mentionOffset
-                val end = start + mentions!!.insertedMentions[0].mentionLength
 
-                var formatedString  =  comment.comment
 
-                Log.e("TAG", "onClick: " +)
+                var startBraced = "/{"
+                var endBraced = "} "
+
+                var formatedString = comment.comment
+                var newString = ""
+                for (i in comment.mentions.indices){
+                    val start = mentions?.insertedMentions?.get(i)?.mentionOffset
+                    val end = start?.plus(mentions?.insertedMentions?.get(i)?.mentionLength!!)!!
+
+                    if (comment.mentions.lastIndex == i) {
+                        newString = newString + formatedString.substring(
+                            newString.length-2,
+                            start
+                        ) + startBraced + formatedString.substring(start, end) + endBraced + formatedString.substring(end)
+                    } else {
+                        newString = newString + formatedString.substring(
+                            newString.length,
+                            start
+                        ) + startBraced + formatedString.substring(start, end) + endBraced
+                    }
+
+                }
+
+
+
+                Log.e("TAG", "onClick: fs-->" +formatedString)
+                Log.e("TAG", "onClick: ns-->" +newString)
 
                 // clear comment field
                 commentField!!.setText("")
