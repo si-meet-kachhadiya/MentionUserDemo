@@ -1,17 +1,23 @@
 package com.mentionuserdemo
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import com.mentionuserdemo.MentionEditText.OnMentionInputListener
 import com.mentionuserdemo.databinding.ActivityMainBinding
 import java.util.regex.Pattern
 
 class MainActivity : AppCompatActivity(), SocialMentionAutoComplete.textShows {
 
-    private val users = arrayOf("meet kachhadiya", "praveen yadav", "john_doe", "alice")
+    private val users = arrayOf("meet Kachhadiya", "Praveen yadav", "John_doe", "alice")
+    var formattedOfString = "@%s "
+
 
     val mb by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -109,6 +115,29 @@ class MainActivity : AppCompatActivity(), SocialMentionAutoComplete.textShows {
 
                 override fun afterTextChanged(s: Editable?) {}
             })
+
+            mb.apply {
+                val mentionList = etMention.getMentionList("@",true) //get a list of mention string
+
+                etMention.setMentionTextColor(Color.RED) //optional, set highlight color of mention string
+
+                etMention.setPattern("@","@[\\u4e00-\\u9fa5\\w\\-]+") //optional, set regularExpression
+
+                etMention.setOnMentionInputListener { tag ->
+                    Log.e(
+                        "TAG",
+                        "onMentionCharacterInput: " + tag
+                    )
+                }
+
+                root.setOnClickListener {
+                    Log.e("TAG", "initialize: "+mentionList )
+                    Log.e("TAG", "initialize: "+etMention.text )
+                }
+            }
+
+
+
         }
     }
 
@@ -130,7 +159,7 @@ class MainActivity : AppCompatActivity(), SocialMentionAutoComplete.textShows {
     }
 
     override fun autoText(query: String) {
-        filterUsers(query)
+//        filterUsers(query)
 //        map["@" + mentionPerson] = mentionPerson
     }
 }
